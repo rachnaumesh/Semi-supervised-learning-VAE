@@ -1,75 +1,80 @@
 # Semi-supervised-learning-VAE
 
-Introduction
+## Introduction
 
-This project explores the use of a VAE for feature extraction and an SVM for classification, particularly in semi-supervised settings. The VAE learns a latent representation of the Fashion MNIST data, and this latent space is used to train an SVM classifier. The implementation evaluates the performance of this VAE-SVM approach with varying amounts of labeled data.
+This project implements a VAE as a feature extractor and uses an SVM for classification on the Fashion MNIST dataset. The implementation includes:
 
-Data Preparation
+- Training the VAE with varying amounts of labeled data
+- Using the VAE as a feature extractor for the SVM classifier
+- Evaluating the model's performance with different numbers of labels
 
-The Fashion MNIST dataset is loaded and split into labeled and unlabeled subsets. The labeled subsets are used to train the SVM, while the entire dataset is used for training the VAE. We ensure that each labeled subset contains an equal number of examples from each class. The dataset is normalized and transformed into tensors using the torchvision library.
+## Data Preparation
 
-Model Architecture
+The Fashion MNIST dataset is used for this project. The data is split into labeled and unlabeled subsets, with the labeled subset containing equal numbers of examples from each class.
 
-The implemented VAE consists of:
+## Model Architecture
 
-	•	Encoder: Two fully connected layers with Softplus activation functions, which map the input images to a latent space. The encoder outputs the mean and log variance for the latent space, which follows a Gaussian distribution.
-	•	Reparameterization: A step that samples from the latent space using the mean and log variance to allow backpropagation through the stochastic layer.
-	•	Decoder: Two fully connected layers with Softplus activations. The final layer uses a Sigmoid activation to output a probability distribution over pixel values, reconstructing the input from the latent space.
+The VAE architecture consists of:
 
-Loss Function
+1. Encoder:
+   - Two fully connected hidden layers with Softplus activations
+   - Outputs mean and log variance for the latent space
 
-The VAE is trained using a combination of binary cross-entropy (BCE) and Kullback-Leibler divergence (KLD) as the loss function.
+2. Reparameterization step:
+   - Allows backpropagation through the stochastic layer
+   - Samples from the latent space using mean and log variance
 
-Experiment Setup
+3. Decoder:
+   - Two hidden layers with Softplus activations
+   - Final layer uses sigmoid activation
 
-The experiments involve training the VAE-SVM model with varying amounts of labeled data: 100, 600, 1000, and 3000 labels. A fixed random seed (np.random.seed(42)) ensures reproducibility.
+## Training
 
-The encoder’s latent space outputs are used to train the SVM classifier. We experimented with different latent space dimensions and SVM kernels, and we found that a 10-dimensional latent space and an RBF (Radial Basis Function) kernel yielded the best results.
+Set random seed for reproducibility:
 
-Training
+np.random.seed(42)
 
-To train the VAE and SVM:
+## Loss Function
 
-	1.	VAE Training:
-	•	The VAE is trained on both labeled and unlabeled data. The number of labels can be specified in the run configuration.
-	•	During training, the VAE learns to extract latent representations from the images.
-	2.	SVM Training:
-	•	After training the VAE, the encoder’s output for the labeled data is extracted and used to train the SVM classifier.
-	•	The SVM is trained using different kernel functions, with the RBF kernel providing the best classification results.
+The VAE is trained using a combination of **Binary Cross-Entropy (BCE)** and **Kullback-Leibler Divergence (KLD)** as the loss function.
 
-Training Parameters
+## Training Steps
 
-	•	Latent Space Dimension: 10
-	•	SVM Kernel: RBF (Radial Basis Function)
-	•	Labels: 100, 600, 1000, 3000
+1. Run the `run_experiment` function with the desired number of labels.
+   - This function trains the VAE, extracts latent representations, and fits the SVM classifier.
 
-Results
+## Training Parameters
 
-The table below summarizes the test accuracy of the VAE-SVM model for different numbers of labeled examples:
+- **Number of labeled examples**: 100, 600, 1000, and 3000
+- **Latent space dimension**: 10
+- **SVM kernel**: RBF (Radial Basis Function)
 
-Number of Labels	Latent Dimension	SVM Kernel	Test Accuracy (%)
-100	10	RBF	64.82
-600	10	RBF	76.32
-1000	10	RBF	76.47
-3000	10	RBF	79.90
+## Results
 
-From the results, it is evident that increasing the number of labeled data samples improves the classification accuracy. Even with a small number of labels, the VAE combined with the RBF kernel SVM can achieve competitive performance.
+The model's performance is evaluated using test accuracy for different numbers of labeled examples:
 
-Training and Testing Instructions
+| Number of Labels | Latent Dimension | SVM Kernel | Test Accuracy (%) |
+|------------------|------------------|------------|-------------------|
+| 100              | 10               | RBF        | 64.82             |
+| 600              | 10               | RBF        | 76.32             |
+| 1000             | 10               | RBF        | 76.47             |
+| 3000             | 10               | RBF        | 79.90             |
 
-To train and test the VAE-SVM model, follow these steps:
+## Testing
 
-	1.	Training:
-	•	Run the training script, specifying the number of labels to use. This will train the VAE, extract latent representations, and train the SVM classifier.
-	2.	Testing:
-	•	After training, the SVM classifier is evaluated on the test set, and the classification accuracy is displayed for each experiment.
-	3.	Saving Weights:
-	•	The VAE weights are saved after each experiment in the vae_weights directory for future use.
+To test the model:
 
-Conclusion
+- The SVM is evaluated on the test set after training.
+- Classification accuracy is displayed for each experiment.
 
-This project demonstrates the effectiveness of combining a VAE for feature extraction with an SVM classifier for semi-supervised learning on the Fashion MNIST dataset. The results show that the VAE-SVM model performs well, even with limited labeled data.
+## Saving Weights
 
-References
+- The VAE weights are saved after each experiment in the `vae_weights` directory for future reference.
 
-	•	Kingma, D. P., Mohamed, S., Rezende, D. J., & Welling, M. (2014). Semi-supervised Learning with Deep Generative Models. Advances in Neural Information Processing Systems.
+## Conclusion
+
+This project demonstrates the implementation of a semi-supervised learning approach using a VAE and SVM on the Fashion MNIST dataset. The results show the effectiveness of this method in achieving competitive performance with limited labeled data.
+
+## References
+
+- Kingma, D. P., Mohamed, S., Rezende, D. J., & Welling, M. (2014). *Semi-supervised Learning with Deep Generative Models*. Advances in Neural Information Processing Systems, 27.
